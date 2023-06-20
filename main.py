@@ -21,6 +21,8 @@ button = Pin(10, Pin.IN, Pin.PULL_UP)
 speaker = PWM(Pin(13))
 redled = Pin(12, Pin.OUT)
 blueled = Pin(11, Pin.OUT)
+redled.high()
+blueled.low()
 
 def playnote(Note):
     speaker.duty_u16(0)
@@ -48,10 +50,15 @@ def play_song(song, note_duration):
             sleep(0.05)  # Debounce
             break  # Stop playing the song if the button is pressed
 
+last_song_mario = False  # Use a flag to remember the last song that was played
+
 while True:
     if button_pressed():
         sleep(0.05)  # Debounce
-        # Play the appropriate song depending on the button's state
-        if button_pressed():
-            play_song(mario, 0.2)
+        # Play the appropriate song depending on the last song that was played
+        if last_song_mario:
             play_song(hotcrossedbuns, 0.4)
+            last_song_mario = False
+        else:
+            play_song(mario, 0.2)
+            last_song_mario = True
