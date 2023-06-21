@@ -54,7 +54,7 @@ def play_song(song, note_duration):
             break  # Stop playing the song if the button is pressed
 
 # Create a list of songs and durations
-songs = [(mario, 0.2), (starwars, 0.4), (tetris, 0.2)]
+songs = [(mario, 0.2), (starwars, 0.2), (tetris, 0.2)]
 
 song_index = 0  # Use an index to remember the last song that was played
 
