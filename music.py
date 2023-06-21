@@ -1,4 +1,5 @@
 from machine import PWM, Pin
+from picozero import pico_led, LED, Button
 from time import sleep
 
 MusicNotes = {"B0": 31, "C1": 33,"CS1": 35,"D1": 37,"DS1": 39,"E1": 41,"F1": 44,"FS1": 46,"G1": 49,"GS1": 52,"A1": 55,"AS1": 58,"B1": 62,
@@ -20,12 +21,11 @@ starwars = ["A4","A4","A4","F4","C5","A4","F4","C5","A4","0","E5","E5","E5","F5"
             "0","AS4","DS5","D5","CS5","C5","B4","0","E5","E5","E5","F5","C5","GS4","F4","C5","A4","0", "A5","A4","A4","A5","GS5","G5","FS5","F5","FS5","0","AS4",
             "DS5","D5","CS5","C5","B4","0","0"]
 
-button = Pin(10, Pin.IN, Pin.PULL_UP)
+button = Button(10)
 speaker = PWM(Pin(13))
-redled = Pin(12, Pin.OUT)
-blueled = Pin(11, Pin.OUT)
-redled.high()
-blueled.low()
+redled = LED(12)
+blueled = LED(11)
+redled.on()
 
 def playnote(Note):
     speaker.duty_u16(0)
@@ -38,9 +38,6 @@ def playnote(Note):
 def stopnote():
     speaker.duty_u16(0)
 
-def button_pressed():
-    return button.value() == 0  # Returns True when the button is pressed
-
 def play_song(song, note_duration):
     for note in song:
         if note == "0" or note == "S":
@@ -49,7 +46,7 @@ def play_song(song, note_duration):
         else:
             playnote(note)
             sleep(note_duration)
-        if button_pressed():
+        if button.is_pressed:
             sleep(0.05)  # Debounce
             break  # Stop playing the song if the button is pressed
 
@@ -59,7 +56,7 @@ songs = [(mario, 0.2), (starwars, 0.2), (tetris, 0.2)]
 song_index = 0  # Use an index to remember the last song that was played
 
 while True:
-    if button_pressed():
+    if button.is_pressed:
         sleep(0.05)  # Debounce
         # Play the appropriate song depending on the last song that was played
         play_song(*songs[song_index])
