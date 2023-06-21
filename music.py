@@ -14,8 +14,11 @@ mario = ["E7", "E7", "0", "E7", "0", "C7", "E7", "0", "G7", "0", "0", "0", "G6",
          "0", "0", "A6", "0", "B6", "0", "AS6", "A6", "0", "G6", "E7", "0", "G7", "A7", "0", "F7", "G7", "0", "E7", "0","C7", "D7",
         "B6", "0", "0", "C7", "0", "0", "G6", "0", "0", "E6", "0", "0", "A6", "0", "B6", "0", "AS6", "A6", "0", "G6", "E7", "0", "G7",
         "A7", "0", "F7", "G7", "0", "E7", "0","C7", "D7", "B6", "0", "0"]
-
-hotcrossedbuns = ["E3", "0", "D3", "0", "C3", "0", "S", "E3", "0", "D3", "0", "C3", "0", "S", "C3", "C3", "C3", "C3", "D3", "D3", "D3", "D3", "S", "E3", "0", "D3", "0", "C3", "0"]
+tetris = ["E5","B4","C5","D5","C5","B4","A4","A4","C5","E5","D5","C5","B4","C5","D5","E5","C5","A4","A4","0","C5","E5","D5","C5","B4","C5","D5","E5","C5","A4",
+          "A4","0","A5","GS5","B5","D6","C6","B5","A5","A5","D6","FS6","F6","DS6","E6","CS6","B5","B5","E6","G6","FS6","F6","DS6","E6","CS6","B5","B5","0","0"]
+starwars = ["A4","A4","A4","F4","C5","A4","F4","C5","A4","0","E5","E5","E5","F5","C5","GS4","F4","C5","A4","0","A5","A4","A4","A5","GS5","G5","FS5","F5","FS5",
+            "0","AS4","DS5","D5","CS5","C5","B4","0","E5","E5","E5","F5","C5","GS4","F4","C5","A4","0", "A5","A4","A4","A5","GS5","G5","FS5","F5","FS5","0","AS4",
+            "DS5","D5","CS5","C5","B4"]
 
 button = Pin(10, Pin.IN, Pin.PULL_UP)
 speaker = PWM(Pin(13))
@@ -50,15 +53,14 @@ def play_song(song, note_duration):
             sleep(0.05)  # Debounce
             break  # Stop playing the song if the button is pressed
 
-last_song_mario = False  # Use a flag to remember the last song that was played
+# Create a list of songs and durations
+songs = [(mario, 0.2), (starwars, 0.4), (tetris, 0.2)]
+
+song_index = 0  # Use an index to remember the last song that was played
 
 while True:
     if button_pressed():
         sleep(0.05)  # Debounce
         # Play the appropriate song depending on the last song that was played
-        if last_song_mario:
-            play_song(hotcrossedbuns, 0.4)
-            last_song_mario = False
-        else:
-            play_song(mario, 0.2)
-            last_song_mario = True
+        play_song(*songs[song_index])
+        song_index = (song_index + 1) % len(songs)  # Increment and wrap the index
